@@ -15,6 +15,9 @@ pts = deque(maxlen=BUFFER)
 N = 1 # Noise factor
 trueDraw = 1 # Boolean to show true mouse position
 D = 0.95 # Drag
+pFactor = 1
+qFactor = 10
+rFactor = 1000
 
 # |v| Needs refactoring
 
@@ -36,7 +39,6 @@ class Points:
 # |^| Needs refactoring
 
 def addPoint(event, x,y, flags, param):
-    global N, trueDraw
     if trueDraw:
         truePoint = Points(x,y,color = COLOR_GREEN)
         pts.appendleft(truePoint)
@@ -61,23 +63,23 @@ def trueShow(x):
     trueDraw = x
     pts.clear()
 
-def mouseTrackInit():
+def mouseTrackInit(p=pFactor, q=qFactor, r=rFactor):
     state = np.zeros((4,1), np.float32) # x, y, delta_x, delta_y
-    estimateCovariance = np.eye(state.shape[0])*10
+    estimateCovariance = np.eye(state.shape[0])*p
 
     stateEstimate = np.array([[1,0,1,0],[0,1,0,1],[0,0,D,0],[0,0,0,D]],np.float32)
     observation = np.array([[1,0,0,0],[0,1,0,0]],np.float32)
     measurement = np.zeros((2,1),np.float32)
 
-    processNoiseCovariance = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],np.float32)*1
-    measurementNoiseCovariance = np.array([[1,0],[0,1]], np.float32)*100
+    processNoiseCovariance = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],np.float32)*q
+    measurementNoiseCovariance = np.array([[1,0],[0,1]], np.float32)*r
 
     return KalmanFilterDiscrete(X=state,P=estimateCovariance,A=stateEstimate,H=observation,Z=measurement,Q=processNoiseCovariance,R=measurementNoiseCovariance)
 
 if __name__ == "__main__":
     cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_AUTOSIZE|cv2.WINDOW_GUI_NORMAL)
     cv2.setMouseCallback(WINDOW_NAME,addPoint)
-    cv2.createTrackbar("Noise factor", WINDOW_NAME, N, 100, noise)
+    cv2.createTrackbar("Noise factor", WINDOW_NAME, N, 50, noise)
     cv2.createTrackbar("True measurements\n0 : OFF \n1 : ON", WINDOW_NAME, trueDraw, 1, trueShow)
 
     kf = mouseTrackInit()
