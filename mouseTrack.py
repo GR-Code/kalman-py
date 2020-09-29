@@ -15,12 +15,13 @@ pts = deque(maxlen=BUFFER)
 N = 1 # Noise factor
 trueDraw = 1 # Boolean to show true mouse position
 D = 0.95 # Drag
-pFactor = 1
-qFactor = 10
-rFactor = 1000
+
+# Tweak these factors to adjust covariance matrices
+pFactor = 10
+qFactor = 100
+rFactor = 10000
 
 # |v| Needs refactoring
-
 class Points:
     def __init__(self, x, y, color=COLOR_RED, fadeTo = COLOR_BLACK, steps=BUFFER/10):
         self.coords, self.color, self.fadeTo = (x,y), color, fadeTo
@@ -35,8 +36,8 @@ class Points:
             newColor.append((self.f*a + (1-self.f)*b)//2)
         self.currentColor = newColor
         return newColor
-
 # |^| Needs refactoring
+
 
 def addPoint(event, x,y, flags, param):
     if trueDraw:
