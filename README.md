@@ -13,4 +13,4 @@ This project uses a basic Kalman Filter to track the pointer on an OpenCV window
 * [An Introduction to the Kalman Filter - Greg Welch, Gary Bishop](http://www.cs.unc.edu/~welch/kalman/kalmanIntro.html)
 * [How a Kalman Filter works in pictures - Bzarg](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/)
 
-Javascript version of the same project : [HERE](https://gr-code.github.io/kalman-js/)
+JavaScript version of the same project for experimentation : [HERE](https://gr-code.github.io/kalman-js/)
